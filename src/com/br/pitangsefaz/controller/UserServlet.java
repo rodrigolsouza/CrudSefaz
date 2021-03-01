@@ -17,6 +17,7 @@ import com.br.pitangsefaz.model.*;
 
 
 
+
 @WebServlet("/userServlet/*")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -25,9 +26,7 @@ public class UserServlet extends HttpServlet {
     public void init() {
     	userDao= new UserDao();
     }
-    public UserServlet() {
-    	
-    }
+ 
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request,response);	
@@ -35,14 +34,20 @@ public class UserServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
-		
+//		if(action == null || action.isEmpty()) {
+//			showLoginForm(request, response);
+//		}else if (action.equalsIgnoreCase("validate")) {
+//			validateLogin(request,response);
+//		}else if (action.equalsIgnoreCase("new")) {
+//			showNewForm(request, response);
+//		}
 		try {
 			if(action == null || action.isEmpty()) {
 				showLoginForm(request, response);
 			}else if (action.equalsIgnoreCase("validate")) {
 				validateLogin(request,response);
-			}else if (action.equalsIgnoreCase("menu")) {
-				showMenuUser(request,response);
+			}else if(action.equalsIgnoreCase("list")) {
+				list(request,response);
 			}else if (action.equalsIgnoreCase("new")) {
 				showNewForm(request, response);
 			} else if (action.equalsIgnoreCase("insert")) {
@@ -61,15 +66,16 @@ public class UserServlet extends HttpServlet {
 		}
 	}
 	
+//	private void showMenuUser(HttpServletRequest request, HttpServletResponse response)
+//			throws ServletException, IOException {
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("menu.jsp");
+//		dispatcher.forward(request, response);
+//	}
+	
+	
 	private void showLoginForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-		dispatcher.forward(request, response);
-	}
-	
-	private void showMenuUser(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("menu.jsp");
 		dispatcher.forward(request, response);
 	}
 	
@@ -78,9 +84,12 @@ public class UserServlet extends HttpServlet {
 		String username=null;
 		String password=null;
 		username= request.getParameter("username");
-		password= request.getParameter("password");
-		if (userDao.validate(password, username)==true) {
-			response.sendRedirect(request.getContextPath()+"/userServlet?action=menu");
+		password= request.getParameter("passWord");
+		User userLogin= userDao.validate(password, username);
+		if (userLogin!=null) {
+			response.sendRedirect(request.getContextPath()+"/userServlet?action=list");
+//			RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
+//			dispatcher.forward(request, response);
 		}else {
 			System.out.println("User or password invalid");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
@@ -91,21 +100,21 @@ public class UserServlet extends HttpServlet {
 			throws SQLException, IOException, ServletException {
 		List<User> users = userDao.get();
 		request.setAttribute("users", users);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
-		int id = Integer.parseInt(request.getParameter());
+		int id = Integer.parseInt(request.getParameter("id"));
 		User selectedUser = userDao.get(id);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
 		request.setAttribute("user", selectedUser);
 		dispatcher.forward(request, response);
 
@@ -113,9 +122,9 @@ public class UserServlet extends HttpServlet {
 
 	private void insert(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		String name = request.getParameter();
-		String email = request.getParameter();
-		String passWord = request.getParameter();
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String passWord = request.getParameter("passWord");
 		User newUser = new User(name, email, passWord);
 		
 		userDao.save(newUser);
@@ -124,10 +133,10 @@ public class UserServlet extends HttpServlet {
 
 	private void update(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		int id = Integer.parseInt(request.getParameter());
-		String name = request.getParameter();
-		String email = request.getParameter();
-		String passWord = request.getParameter();
+		int id = Integer.parseInt(request.getParameter("id"));
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String passWord = request.getParameter("passWord");
 		
 		User user = new User(id, name, email, passWord);
 		userDao.update(user);
@@ -136,7 +145,7 @@ public class UserServlet extends HttpServlet {
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException {
-		int id = Integer.parseInt(request.getParameter());
+		int id = Integer.parseInt(request.getParameter("id"));
 		userDao.delete(id);
 		response.sendRedirect(request.getContextPath());
 	}

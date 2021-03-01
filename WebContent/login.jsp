@@ -9,15 +9,15 @@
 <body>
 	<div align="center">
 		<h1>User Login</h1>
-		<form action="validateLogin" method="post">
+		<form action="${pageContext.request.contextPath}/userServlet?action=validate" method="post">
 			<Table>
 				<tr>
 					<td>User Name:</td>
 					<td><input type="text" name="username"></td>
 				</tr>
 				<tr>
-					<td>Password:</td>
-					<td><input type="password" name="password"></td>
+					<td>PassWord:</td>
+					<td><input type="text" name="passWord"></td>
 				</tr>
 				<tr>
 					<td></td>
@@ -26,7 +26,7 @@
 			</Table>
 		</form>
 		<div align="center">
-			<form action="newUser" method="post">
+			<form action="${pageContext.request.contextPath}/userServlet?action=new"  method="post">
 				<Table>
 					<tr>
 						<td></td>

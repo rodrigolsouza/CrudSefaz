@@ -2,6 +2,8 @@ package com.br.pitangsefaz.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -89,32 +91,19 @@ public class UserDao {
 		return user;
 	}
 	
-	public boolean validate(String password, String email) {
-		boolean answer=false;
+	public User validate(String password, String email) {
 		Transaction transaction = null;
-		String userLogin= null;
-		String userPassword=null;
+		User userLogin= null;
 		
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			// start a transaction
 			transaction = session.beginTransaction();
-			// get an user object
-			transaction = session.beginTransaction();
-			userLogin = (String) session.createQuery("FROM User WHERE email = :email")
-			.setParameter("email", email)		
-			.uniqueResult();
-			
-			userPassword= (String) session.createQuery("From User WHERE password = :password")
-					.setParameter("password", password)
-					.getSingleResult();
+			Query q = session.createQuery("FROM User WHERE email = :email and password = :password");
+			q.setParameter("email", email);
+			q.setParameter("password",password);
+			userLogin= (User)q.getSingleResult();
 			// commit transaction
 			transaction.commit();
-			
-			if (userLogin.equals(email) && userPassword.equals(userPassword)) {
-				answer=true;
-			}else {
-				answer=false;
-			}
 			
 		} catch (Exception e) {
 			if (transaction != null) {
@@ -122,7 +111,7 @@ public class UserDao {
 			}
 			e.printStackTrace();
 		}
-		return answer;
+		return userLogin;
 	}
 	
 
