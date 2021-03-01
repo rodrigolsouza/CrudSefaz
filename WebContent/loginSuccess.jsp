@@ -6,7 +6,10 @@
 <meta charset="ISO-8859-1">
 </head>
 <body>
-	<!-- redirect to Login page -->
-	<jsp:forward page="/userServlet?action" />
+<div align= "center">
+<h1>You have successfully login</h1> 
+</div>
+	<!-- redirect to Menu page -->
+	<jsp:forward page="/userServlet?action=menu" />
 </body>
 </html>
