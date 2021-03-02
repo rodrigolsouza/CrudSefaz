@@ -12,21 +12,20 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
-
 @Entity
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY )
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@NotBlank(message= "this field may not be empty")
+
+	@NotBlank(message = "this field may not be empty")
 	private String name;
-	
-	@Column(unique=true)
+
+	@Column(unique = true)
 	private String email;
 
 	private String passWord;
-	
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<PhoneNumber> phoneNumbers;
 

@@ -10,7 +10,6 @@ import org.hibernate.Transaction;
 import com.br.pitangsefaz.model.*;
 import com.br.pitangsefaz.util.HibernateUtil;
 
-
 public class UserDao {
 
 	public void save(User user) {
@@ -90,21 +89,21 @@ public class UserDao {
 		}
 		return user;
 	}
-	
+
 	public User validate(String password, String email) {
 		Transaction transaction = null;
-		User userLogin= null;
-		
+		User userLogin = null;
+
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			// start a transaction
 			transaction = session.beginTransaction();
 			Query q = session.createQuery("FROM User WHERE email = :email and password = :password");
 			q.setParameter("email", email);
-			q.setParameter("password",password);
-			userLogin= (User)q.getSingleResult();
+			q.setParameter("password", password);
+			userLogin = (User) q.getSingleResult();
 			// commit transaction
 			transaction.commit();
-			
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
@@ -113,7 +112,6 @@ public class UserDao {
 		}
 		return userLogin;
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public List<User> get() {
@@ -124,9 +122,9 @@ public class UserDao {
 			// start a transaction
 			transaction = session.beginTransaction();
 			// get an user object
-			
+
 			users = session.createQuery("from User").getResultList();
-			
+
 			// commit transaction
 			transaction.commit();
 		} catch (Exception e) {

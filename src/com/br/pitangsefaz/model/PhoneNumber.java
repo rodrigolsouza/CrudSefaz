@@ -13,21 +13,21 @@ public class PhoneNumber {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	private int ddd;
-	
+
 	private String number;
-	
+
 	private String type;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="user_id")
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	public PhoneNumber() {
 		super();
 	}
-	
+
 	public PhoneNumber(int ddd, String number, String type, User user) {
 		super();
 		this.ddd = ddd;
@@ -48,24 +48,31 @@ public class PhoneNumber {
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public int getDdd() {
 		return ddd;
 	}
+
 	public void setDdd(int ddd) {
 		this.ddd = ddd;
 	}
+
 	public String getNumber() {
 		return number;
 	}
+
 	public void setNumber(String number) {
 		this.number = number;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -80,8 +87,7 @@ public class PhoneNumber {
 
 	@Override
 	public String toString() {
-		return "PhoneNumber:" + "(" + ddd + ")" + number +" "+ type;
+		return "PhoneNumber:" + "(" + ddd + ")" + number + " " + type;
 	}
-	
-	
+
 }

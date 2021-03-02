@@ -15,24 +15,22 @@ import com.br.pitangsefaz.dao.UserDao;
 
 import com.br.pitangsefaz.model.*;
 
-
-
-
 @WebServlet("/userServlet/*")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private UserDao userDao;
-    
-    public void init() {
-    	userDao= new UserDao();
-    }
- 
-    
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request,response);	
+	private UserDao userDao;
+
+	public void init() {
+		userDao = new UserDao();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getParameter("action");
 //		if(action == null || action.isEmpty()) {
 //			showLoginForm(request, response);
@@ -42,13 +40,13 @@ public class UserServlet extends HttpServlet {
 //			showNewForm(request, response);
 //		}
 		try {
-			if(action == null || action.isEmpty()) {
+			if (action == null || action.isEmpty()) {
 				showLoginForm(request, response);
-			}else if (action.equalsIgnoreCase("validate")) {
-				validateLogin(request,response);
-			}else if(action.equalsIgnoreCase("list")) {
-				list(request,response);
-			}else if (action.equalsIgnoreCase("new")) {
+			} else if (action.equalsIgnoreCase("validate")) {
+				validateLogin(request, response);
+			} else if (action.equalsIgnoreCase("list")) {
+				list(request, response);
+			} else if (action.equalsIgnoreCase("new")) {
 				showNewForm(request, response);
 			} else if (action.equalsIgnoreCase("insert")) {
 				insert(request, response);
@@ -59,43 +57,37 @@ public class UserServlet extends HttpServlet {
 			} else if (action.equalsIgnoreCase("update")) {
 				update(request, response);
 			} else {
-				showLoginForm(request, response);	
+				showLoginForm(request, response);
 			}
 		} catch (SQLException ex) {
 			throw new ServletException(ex);
 		}
 	}
-	
-//	private void showMenuUser(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("menu.jsp");
-//		dispatcher.forward(request, response);
-//	}
-	
-	
+
 	private void showLoginForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
 		dispatcher.forward(request, response);
 	}
-	
-	private void validateLogin(HttpServletRequest request, HttpServletResponse response) 
+
+	private void validateLogin(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String username=null;
-		String password=null;
-		username= request.getParameter("username");
-		password= request.getParameter("passWord");
-		User userLogin= userDao.validate(password, username);
-		if (userLogin!=null) {
-			response.sendRedirect(request.getContextPath()+"/userServlet?action=list");
+		String username = null;
+		String password = null;
+		username = request.getParameter("username");
+		password = request.getParameter("passWord");
+		User userLogin = userDao.validate(password, username);
+		if (userLogin != null) {
+			response.sendRedirect(request.getContextPath() + "/userServlet?action=list");
 //			RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
 //			dispatcher.forward(request, response);
-		}else {
+		} else {
 			System.out.println("User or password invalid");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
 			dispatcher.forward(request, response);
 		}
 	}
+
 	private void list(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		List<User> users = userDao.get();
@@ -120,35 +112,31 @@ public class UserServlet extends HttpServlet {
 
 	}
 
-	private void insert(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+	private void insert(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String passWord = request.getParameter("passWord");
 		User newUser = new User(name, email, passWord);
-		
+
 		userDao.save(newUser);
 		response.sendRedirect(request.getContextPath());
 	}
 
-	private void update(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+	private void update(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String passWord = request.getParameter("passWord");
-		
+
 		User user = new User(id, name, email, passWord);
 		userDao.update(user);
 		response.sendRedirect(request.getContextPath());
 	}
 
-	private void delete(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+	private void delete(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		userDao.delete(id);
 		response.sendRedirect(request.getContextPath());
 	}
-
 
 }

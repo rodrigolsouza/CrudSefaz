@@ -18,8 +18,7 @@ public class PhoneNumberDao {
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 			phoneNumbers = session.createQuery("FROM PhoneNumber WHERE user_id = :user_id")
-			.setParameter("user_id", userId)		
-			.getResultList();
+					.setParameter("user_id", userId).getResultList();
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
@@ -29,7 +28,7 @@ public class PhoneNumberDao {
 		}
 		return phoneNumbers;
 	}
-	
+
 	public void save(PhoneNumber phoneNumber) {
 		Transaction transaction = null;
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -43,7 +42,7 @@ public class PhoneNumberDao {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void delete(int id) {
 		Transaction transaction = null;
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -61,7 +60,7 @@ public class PhoneNumberDao {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public PhoneNumber get(int id) {
 
 		Transaction transaction = null;
@@ -78,7 +77,7 @@ public class PhoneNumberDao {
 		}
 		return phoneNumber;
 	}
-	
+
 	public void update(PhoneNumber phoneNumber) {
 		Transaction transaction = null;
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -92,5 +91,5 @@ public class PhoneNumberDao {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
